@@ -44,3 +44,5 @@ with gzip.open('/scratch4/tlippin1/data/chadwyck.jsonl.gz','r') as ifd:
 
 with open('author_poem_stanza_lines.json','w') as file:
     json.dump(lines_per_stanza_by_poem_and_author,file)
+
+print('hello')
