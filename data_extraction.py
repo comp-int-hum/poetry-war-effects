@@ -1,48 +1,36 @@
 import json
 import gzip # built-in decompression tool
 
-#all_poems = []
-author_poem_counts = {}
-lines_per_stanza_by_poem_and_author= {}
 
-#with gzip.open('/scratch4/tlippin1/data/chadwyck.jsonl.gz','r') as ifd:
-    #for i,line in enumerate(ifd):
-        #if i > 10000:
-            #break
-        #poem = json.loads(line)
-        #all_poems.append(poem)
-        #author = poem['author']
-        #if author not in author_poem_counts:
-            #author_poem_counts[author] = 1
-        #else:
-            #author_poem_counts[author] += 1
+with gzip.open('/scratch4/tlippin1/data/chadwyck_new.jsonl.gz','r') as ifd:
+    count_pre_war = 0
+    count_post_war = 0
 
-with gzip.open('/scratch4/tlippin1/data/chadwyck.jsonl.gz','r') as ifd:
     for line in ifd:
         poem = json.loads(line)
-        author = poem['author']
-        title = poem['title']
-        stanzas = poem['stanzas']
 
-        # first dictionary: author_poem_counts
-        if author not in author_poem_counts:
-            author_poem_counts[author] = 1
+        # eliminate poems where author dob is unknown
+        # question about this code block: modern poets?
+        if poem['original_metadata']['author_dob'] == 'None':
+            continue
         else:
-            author_poem_counts[author] += 1
+            # extract the year in which the poem is written
+            if poem['original_metadata']['year'] != '0':
+                year_written = int(poem['original_metadata']['year'])
+            else:
+                if poem['original_metadata']['author_dod'] != 'None':
+                    year_written = int(poem['original_metadata']['author_dob']) + 40
+                else:
+                    year_written = int(int((poem['original_metadata']['author_dob']) + int(poem['original_metadata']['author_dod'])) / 2)
+            
+            # check year_written conditions
+            # write into jsonlines file
+            # I don't know how to do that
+            # so first I will count how many entries are in each category
+            if year_written >= 1893 and year_written <= 1913:
+                count_pre_war += 1
+            elif year_written >= 1919 and year_written <= 1939:
+                count_post_war += 1
 
-        # second dictoinary: lines_per_stanza_by_poem_and_author
-        # data structure: {author 1:[{poem 1:[{stanza 1:14 lines}]},{poem 2: [{stanza 1: 20 lines},{stanza 2: 20 lines}]}]
-        if author not in lines_per_stanza_by_poem_and_author:
-            lines_per_stanza_by_poem_and_author[author] = []
-        else:
-            lines_per_stanza = []
-            for i in range(len(stanzas)):
-                lines_per_stanza.append({f'stanza {i+1}':f'{len(stanzas[i])} lines'})
-            lines_per_stanza_by_poem_and_author[author].append({title:lines_per_stanza})
-
-#print(lines_per_stanza_by_poem_and_author)
-
-with open('author_poem_stanza_lines.json','w') as file:
-    json.dump(lines_per_stanza_by_poem_and_author,file)
-
-print('hello')
+print(count_pre_war) # 13950
+print(count_post_war) # 11382
