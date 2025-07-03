@@ -18,7 +18,7 @@ with gzip.open('/scratch4/tlippin1/data/chadwyck_new.jsonl.gz','r') as ifd:
             if poem['original_metadata']['year'] != '0':
                 year_written = int(poem['original_metadata']['year'])
             else:
-                if poem['original_metadata']['author_dod'] != 'None':
+                if poem['original_metadata']['author_dod'] == 'None':
                     year_written = int(poem['original_metadata']['author_dob']) + 40
                 else:
                     year_written = int(int((poem['original_metadata']['author_dob']) + int(poem['original_metadata']['author_dod'])) / 2)
