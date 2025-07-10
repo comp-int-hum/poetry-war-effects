@@ -1,9 +1,11 @@
 import json
 import gzip
 
-with gzip.open('prewar_poetry.jsonl.gz','r') as ifd_pre,gzip.open('postwar_poetry.jsonl.gz','r') as ifd_post:
+with gzip.open('work/prewar_poetry.jsonl.gz','r') as ifd_pre,gzip.open('work/postwar_poetry.jsonl.gz','r') as ifd_post:
     for i,line in enumerate(ifd_pre):
-        if i > 1000:
+        if i > 15:
             break
         poem = json.loads(line)
-        print(poem)
+        content = poem['content']['stanzas']
+        for item in content:
+            print(item)

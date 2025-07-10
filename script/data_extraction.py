@@ -2,7 +2,7 @@ import json
 import gzip # built-in decompression tool
 
 
-with gzip.open('/scratch4/tlippin1/data/chadwyck_new.jsonl.gz','r') as ifd, gzip.open('/home/jzhan299/poetry_project/prewar_poetry.jsonl.gz','w') as ofd_pre, gzip.open('/home/jzhan299/poetry_project/postwar_poetry.jsonl.gz','w') as ofd_post:
+with gzip.open('/scratch4/tlippin1/data/chadwyck_new.jsonl.gz','r') as ifd, gzip.open('/home/jzhan299/poetry_project/work/prewar_poetry.jsonl.gz','w') as ofd_pre, gzip.open('/home/jzhan299/poetry_project/work/postwar_poetry.jsonl.gz','w') as ofd_post:
     count_pre_war = 0
     count_post_war = 0
 
