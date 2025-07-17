@@ -23,4 +23,4 @@ with gzip.open(args.input,'r') as ifd:
                 word_list.append(word_list_per_sentence)
 
 model = Word2Vec(sentences = word_list, vector_size = 100, window = 5, min_count = 1, workers = 4)
-model.save("work/word2vec.model")
+model.save(args.output)
