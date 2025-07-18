@@ -6,16 +6,16 @@ import gzip
 import re
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-i1','--input1',dest = 'input1')
-parser.add_argument('-i2','--input2',dest = 'input2')
-parser.add_argument('-o1','--output1',dest = 'output1')
-parser.add_argument('-o2','--output2',dest = 'output2')
+parser.add_argument('-i1','--input_prewar',dest = 'input_prewar',help = 'prewar jsonlines file')
+parser.add_argument('-i2','--input_postwar',dest = 'input_postwar',help = 'postwar jsonlines file')
+parser.add_argument('-o1','--output_prewar',dest = 'output_prewar',help = 'prewar model')
+parser.add_argument('-o2','--output_postwar',dest = 'output_postwar',help = 'postwar model')
 args = parser.parse_args()
 
 word_list_prewar = []
 word_list_postwar = []
 
-with gzip.open(args.input1,'r') as ifd_prewar:
+with gzip.open(args.input_prewar,'r') as ifd_prewar:
     for line_prewar in ifd_prewar:
         poem_prewar = json.loads(line_prewar)
         content_prewar = poem_prewar['content']['stanzas']
@@ -26,7 +26,7 @@ with gzip.open(args.input1,'r') as ifd_prewar:
                 word_list_per_sentence_prewar = sentence_prewar.split(' ')
                 word_list_prewar.append(word_list_per_sentence_prewar)
 
-with gzip.open(args.input2,'r') as ifd_postwar:
+with gzip.open(args.input_postwar,'r') as ifd_postwar:
     for line_postwar in ifd_postwar:
         poem_postwar = json.loads(line_postwar)
         content_postwar = poem_postwar['content']['stanzas']
@@ -38,6 +38,6 @@ with gzip.open(args.input2,'r') as ifd_postwar:
                 word_list_postwar.append(word_list_per_sentence_postwar)
 
 model_prewar = Word2Vec(sentences = word_list_prewar, vector_size = 100, window = 5, min_count = 1, workers = 4)
-model_prewar.save(args.output1)
+model_prewar.save(args.output_prewar)
 model_postwar = Word2Vec(sentences = word_list_postwar, vector_size = 100, window = 5, min_count = 1, workers = 4)
-model_postwar.save(args.output2)
+model_postwar.save(args.output_postwar)
