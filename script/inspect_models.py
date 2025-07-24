@@ -13,6 +13,25 @@ args = parser.parse_args()
 model_prewar = Word2Vec.load(args.input_prewar)
 model_postwar = Word2Vec.load(args.input_postwar)
 
+def measurement(model1,model2,word):
+    model_prewar = Word2Vec.load(model1)
+    model_postwar = Word2Vec.load(model2)
+
+    sims_prewar = model_prewar.wv.most_similar(word,topn = 10)
+    prewar_scores = []
+    for word,score in sims_prewar:
+        prewar_scores.append(score)
+    prewar_neighborhood_cluster = max(prewar_scores) - min(prewar_scores)
+
+    sims_postwar = model_postwar.wv.most_similar(word,topn = 10)
+    postwar_scores = []
+    for word,score in sims_postwar:
+        postwar_scores.append(score)
+    postwar_neighborhood_cluster = max(postwar_scores) - min(postwar_scores)
+
+    return {'prewar':prewar_neighborhood_cluster,'postwar':postwar_neighborhood_cluster}
+
+
 with open(args.prewar_wordcount,'r') as ifd_prewar:
     dict_prewar = json.load(ifd_prewar)
 with open(args.postwar_wordcount,'r') as ifd_postwar:
@@ -21,7 +40,4 @@ with open(args.postwar_wordcount,'r') as ifd_postwar:
 if dict_prewar[args.word] < 10 or dict_postwar[args.word] < 10:
     print('Insufficient use of word. Please choose another word.')
 else:
-    sims_prewar = model_prewar.wv.most_similar(args.word,topn = 10)
-    sims_postwar = model_postwar.wv.most_similar(args.word,topn = 10)
-    print(sims_prewar)
-    print(sims_postwar)
+    print(measurement(args.input_prewar,args.input_postwar,args.word))
