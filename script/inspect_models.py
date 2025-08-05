@@ -4,6 +4,7 @@ import gzip
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--data_to_examine',dest = 'data_to_examine',help = 'data extracted in extract_neighbors.py')
+parser.add_argument('--words_numerical_output',dest = 'words_numerical_output',help = 'dictionary containing neighborhood spread and percent overlap of words prewar and postwar')
 args = parser.parse_args()
 
 def spread(sims_prewar,sims_postwar):
@@ -36,7 +37,7 @@ def overlap(sims_prewar,sims_postwar):
 
     return percent_overlap
 
-with gzip.open(args.data_to_examine,'r') as ifd:
+with gzip.open(args.data_to_examine,'r') as ifd,gzip.open(args.words_numerical_output,'wt') as ofd:
     for line in ifd:
         my_dict = json.loads(line)
         (word,information), = my_dict.items()
@@ -48,4 +49,4 @@ with gzip.open(args.data_to_examine,'r') as ifd:
                     'percent overlap prewar and postwar':overlap(sims_prewar,sims_postwar)
                 }
             }
-        print(word_dictionary)
+        ofd.write(json.dumps(word_dictionary)+ '\n')
