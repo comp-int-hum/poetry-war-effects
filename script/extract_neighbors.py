@@ -21,44 +21,11 @@ def extraction(model1,model2,word,topn):
     sims_postwar = model2.wv.most_similar(word,topn = topn)
     return sims_prewar,sims_postwar
 
-def spread(sims_prewar,sims_postwar):
-    prewar_scores = []
-    postwar_scores = []
-    
-    for top_word,score in sims_prewar:
-        prewar_scores.append(score)
-    prewar_neighborhood_cluster = max(prewar_scores) - min(prewar_scores)
-
-    for top_word,score in sims_postwar:
-        postwar_scores.append(score)
-    postwar_neighborhood_cluster = max(postwar_scores) - min(postwar_scores)
-
-    return {'prewar':prewar_neighborhood_cluster,'postwar':postwar_neighborhood_cluster}
-
-def overlap(sims_prewar,sims_postwar):
-    prewar_words = []
-    postwar_words = []
-
-    for top_word,score in sims_prewar:
-        prewar_words.append(top_word)
-    for top_word,score in sims_postwar:
-        postwar_words.append(top_word)
-
-    set_sims_prewar = set(prewar_words)
-    set_sims_postwar = set(postwar_words)
-    intersection = len(set_sims_prewar & set_sims_postwar)
-    percent_overlap = intersection / len(sims_prewar)
-
-    return percent_overlap
-
-
-
 with open(args.prewar_wordcount,'r') as ifd_prewar:
     dict_prewar = json.load(ifd_prewar)
 with open(args.postwar_wordcount,'r') as ifd_postwar:
     dict_postwar = json.load(ifd_postwar)
 
-print(len(dict_prewar))
 with gzip.open(args.output,'wt') as ofd:
     for word,count in dict_prewar.items():
         if count > args.min_word_count and word in model_postwar.wv and word in model_prewar.wv:
@@ -67,9 +34,6 @@ with gzip.open(args.output,'wt') as ofd:
                 word:{
                     'sims_prewar':sims_prewar,
                     'sims_postwar':sims_postwar
-                    #'count':count,
-                    #'neighborhood spread':spread(sims_prewar,sims_postwar),
-                    #'percent overlap prewar and postwar':overlap(sims_prewar,sims_postwar)
                 }
             }
-            ofd.write(json.dumps(word_dictionary) + '\n')
+            ofd.write(json.dumps(word_dictionary)+ '\n')
