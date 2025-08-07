@@ -20,7 +20,6 @@ with gzip.open(args.data_to_examine,'r') as ifd:
         percent_overlap = information['percent overlap prewar and postwar']
         word_overlap_dictionary[word] = percent_overlap
 
-print(word_neighborhood_dictionary[args.word])
-print(word_overlap_dictionary[args.word])
-
-# I want to sort the dictionaries here
+word_overlap = list(word_overlap_dictionary.items())
+word_overlap_sorted = sorted(word_overlap,key = lambda any_word:any_word[1],reverse = True)
+print(word_overlap_sorted)
