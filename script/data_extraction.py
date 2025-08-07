@@ -1,5 +1,5 @@
 import json
-import gzip # built-in decompression tool
+import gzip
 import re
 import argparse
 
@@ -14,7 +14,6 @@ parser.add_argument('--postwar_to',dest = 'postwar_to',type = int, default = 193
 parser.add_argument('--output_prewar',dest = 'output_prewar',default = 'work/prewar_poetry.jsonl.gz',help = 'jsonlines file of prewar poetry')
 parser.add_argument('--output_postwar',dest = 'output_postwar',default = 'work/postwar_poetry.jsonl.gz',help = 'jsonlines file of postwar poetry')
 args = parser.parse_args()
-
 
 with gzip.open(args.dataset,'r') as ifd, gzip.open(args.output_prewar,'w') as ofd_pre, gzip.open(args.output_postwar,'w') as ofd_post:
     count_pre_war = 0
