@@ -21,9 +21,8 @@ def extraction(model1,model2,word,topn):
     sims_postwar = model2.wv.most_similar(word,topn = topn)
     return sims_prewar,sims_postwar
 
-with open(args.prewar_wordcount,'r') as ifd_prewar:
+with open(args.prewar_wordcount,'r') as ifd_prewar,open(args.postwar_wordcount,'r') as ifd_postwar:
     dict_prewar = json.load(ifd_prewar)
-with open(args.postwar_wordcount,'r') as ifd_postwar:
     dict_postwar = json.load(ifd_postwar)
 
 with gzip.open(args.output,'wt') as ofd:
