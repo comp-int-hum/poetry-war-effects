@@ -25,9 +25,11 @@ with open(args.prewar_wordcount,'r') as ifd_prewar,open(args.postwar_wordcount,'
     dict_prewar = json.load(ifd_prewar)
     dict_postwar = json.load(ifd_postwar)
 
+all_words = set(dict_prewar.keys() | dict_postwar.keys())
+
 with gzip.open(args.output,'wt') as ofd:
-    for word,count in dict_prewar.items():
-        if count > args.min_word_count and word in model_postwar.wv and word in model_prewar.wv:
+    for word in all_words:
+        if dict_prewar.get(word,0) > args.min_word_count and dict_postwar.get(word,0) > args.min_word_count:
             sims_prewar,sims_postwar = extraction(model_prewar,model_postwar,word,args.topn_words)
             word_dictionary = {
                 word:{
